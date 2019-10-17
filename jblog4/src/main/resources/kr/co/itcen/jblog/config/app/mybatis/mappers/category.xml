@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="category">
+
+	<insert id="default_insert" parameterType="String">
+	<![CDATA[
+	insert into category 
+	values(null,"default_name","default_description",now(),#{blog_id });
+	]]>
+	</insert>
+	
+	<select id="getId" parameterType="String" resultType="categoryvo">
+	<![CDATA[
+	select no,
+		name,
+		description,
+		date_format(reg_date, '%Y-%m-%d %h:%i:%s') as reg_date,
+		blog_id
+	from category
+	where blog_id= #{blog_id}
+	]]>
+	</select>
+	
+	<insert id="addcategory" parameterType="categoryvo">
+	<![CDATA[
+	insert into category 
+	values(null,#{name},#{description},now(),#{blog_id});
+	]]>
+	<selectKey keyProperty="no" resultType="long">
+	<![CDATA[
+		select last_insert_id()
+	]]>
+	</selectKey>
+	</insert>
+	
+	<delete id="delcategory" parameterType="long">
+	<![CDATA[
+	 delete from category 
+	 where no= #{no }
+	]]>
+	</delete>
+	
+	<select id="postcount" parameterType="String" resultType="categoryvo">
+	<![CDATA[
+	select count(post.no) as count,
+			category.no as no ,
+			category.name as name,
+			category.description as description
+	from category left join post
+		on category.no = post.category_no
+	where category.blog_id = #{id}
+	group by category.no
+	]]>
+	</select>
+</mapper>
