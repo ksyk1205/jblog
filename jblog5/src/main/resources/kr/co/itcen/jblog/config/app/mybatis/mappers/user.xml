@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+	<!-- 회원가입을 하기위한 -->
+	<insert id="insert" parameterType="uservo">
+		<![CDATA[
+		insert
+		  into user
+		values (#{id },#{name },#{password },now());
+		]]>
+	</insert>
+
+	<!-- id 중복체크 -->
+	<select id="getById" parameterType='string' resultType="uservo">	
+	<![CDATA[
+	select id
+	from user 
+	where id = #{id }
+	]]>
+	</select>
+	<!-- 로그인을 위한 -->
+	<select id="getByIdAndPassword" parameterType='uservo'
+		resultType="uservo">	
+	<![CDATA[
+	select id, name
+	from user 
+	where id=#{id } and password=#{password }
+	]]>
+	</select>
+</mapper>
